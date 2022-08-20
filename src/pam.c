@@ -24,7 +24,74 @@
 #include "log.h"
 #include "local.h"
 #include "device.h"
-#include "unique.c"
+#include "unique.h"
+
+#include <stdio.h>
+#include <mysql/mysql.h>
+#include <stdlib.h>
+
+MYSQL_RES *mysqldb_query(MYSQL *mysql, char *query)
+{
+    int t;
+    char *head = "SELECT * FROM ";
+    //char query[50] = {0};
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+
+
+    //sprintf(query, "%s%s", head, TABLE_NAME);
+    t = mysql_real_query(mysql, query, strlen(query));
+
+    if (t) {
+        //log.error("Failed to query: %s\n", mysql_error(mysql));
+        return;
+    } //else {
+        //printf("\nQuery successfully!\n");
+    //}
+    res = mysql_store_result(mysql);
+    return res;
+}
+
+int check_user_login_status(char *pass_user)
+{
+    MYSQL *conn;
+    MYSQL_RES *res;
+    MYSQL_ROW row;
+    char server[] = "192.168.135.145";
+    char user[] = "root";
+    char password[] = "test207";
+    char database[] = "wazuh";
+
+    conn = mysql_init(NULL);
+
+    if (!mysql_real_connect(conn, server,user, password, database, 0, NULL, 0))
+    {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        exit(1);
+    }
+        char query[50] = {0};
+        // char *query = "SELECT * FROM user_status WHERE username=\"%s\";";
+        sprintf(query, "SELECT * FROM user_status WHERE username=\"%s\";", pass_user);
+        res = mysqldb_query(conn, query);
+    char *username;
+    char *ip;
+    if (res == NULL) {
+        log_error("Query database failed, assert user is not logged in.\n");
+        mysql_free_result(res);
+        mysql_close(conn);
+        return 0;
+    }
+    while (row = mysql_fetch_row(res)) {
+        username = row[0];ip = row[1];
+        mysql_free_result(res);
+        mysql_close(conn);
+        log_error("User %s has logged in at %s.\n", pass_user, ip);
+        return 1;
+    }
+    mysql_free_result(res);
+    mysql_close(conn);
+    return 0;
+}
 
 PAM_EXTERN
 int pam_sm_authenticate(pam_handle_t *pamh, int flags,
@@ -52,9 +119,8 @@ int pam_sm_authenticate(pam_handle_t *pamh, int flags,
 		return (PAM_AUTH_ERR);
 	}
 
-	if (check_user_login_status(USER_LOGIN_STATUS_PATH, user))
+	if (check_user_login_status(user))
 	{
-		log_error("User \"%s\": Has already logged in.\n", user);
 		return (PAM_AUTH_ERR);
 	}
 

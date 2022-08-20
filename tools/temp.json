@@ -1,0 +1,60 @@
+{
+    "version": 1,
+    "origin": {
+        "name": "node01",
+        "module": "wazuh-execd"
+    },
+    "command": "add",
+    "parameters": {
+        "extra_args": ["active_user"],
+        "alert": {
+            "timestamp": "2022-08-19T23:04:53.656+0800",
+            "rule": {
+                "level": 1,
+                "description": "New fapolicyd rules updated.",
+                "id": "110003",
+                "firedtimes": 5,
+                "mail": false,
+                "groups": ["local", "syslog", "sshd"]
+            },
+            "agent": {
+                "id": "004",
+                "name": "agent4",
+                "ip": "192.168.135.149"
+            },
+            "manager": {
+                "name": "localhost.localdomain"
+            },
+            "id": "1660921493.3507190",
+            "full_log": "File '/var/ossec/etc/shared/conf/fapolicyd/11-custom.rules' modified\nMode: realtime\nChanged attributes: size,mtime,inode,md5,sha1,sha256\nSize changed from '38' to '45'\nOld modification time was: '1660921257', now it is '1660921493'\nOld inode was: '19332165', now it is '33759588'\nOld md5sum was: 'fdec01ec712e60dfa1ab56912d186fd0'\nNew md5sum is : '9ec6bae10c6863cc0c32d8385ef9208c'\nOld sha1sum was: '57661eeffadf3002c8eef9255df2b3f4018e51ef'\nNew sha1sum is : 'b1eefb64c9b71e0ecfdc0a3f1f3dd459e0c2cb11'\nOld sha256sum was: 'd1a79536e5a7654feddbae881346a36c4708604d6764c28bbc92b26fb2466f60'\nNew sha256sum is : 'cb662c06d7473acfbd695c862a87f78c5a4d19e424f9dbccd9ba30c02549d1d6'\n",
+            "syscheck": {
+                "path": "/var/ossec/etc/shared/conf/fapolicyd/11-custom.rules",
+                "mode": "realtime",
+                "size_before": "38",
+                "size_after": "45",
+                "perm_after": "rw-r--r--",
+                "uid_after": "987",
+                "gid_after": "981",
+                "md5_before": "fdec01ec712e60dfa1ab56912d186fd0",
+                "md5_after": "9ec6bae10c6863cc0c32d8385ef9208c",
+                "sha1_before": "57661eeffadf3002c8eef9255df2b3f4018e51ef",
+                "sha1_after": "b1eefb64c9b71e0ecfdc0a3f1f3dd459e0c2cb11",
+                "sha256_before": "d1a79536e5a7654feddbae881346a36c4708604d6764c28bbc92b26fb2466f60",
+                "sha256_after": "cb662c06d7473acfbd695c862a87f78c5a4d19e424f9dbccd9ba30c02549d1d6",
+                "uname_after": "wazuh",
+                "gname_after": "wazuh",
+                "mtime_before": "2022-08-19T23:00:57",
+                "mtime_after": "2022-08-19T23:04:53",
+                "inode_before": 19332165,
+                "inode_after": 33759588,
+                "changed_attributes": ["size", "mtime", "inode", "md5", "sha1", "sha256"],
+                "event": "modified"
+            },
+            "decoder": {
+                "name": "syscheck_integrity_changed"
+            },
+            "location": "syscheck"
+        },
+        "program": "active-response/bin/test.py"
+    }
+}
